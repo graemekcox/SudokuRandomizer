@@ -7,7 +7,8 @@ class Square extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            value: ""
+            id: 0,
+            value: "" // TODO need to make sure only numbers are input
         }
         this.handleChange = this.handleChange.bind(this); // TODO is this necessary?
     }
@@ -16,13 +17,13 @@ class Square extends React.Component{
         if ((event.target.value < 1 || event.target.value > 9) && event.target.value != "") {
             // TODO Contrain values to be within this range
             // TODO, make square go red for a bit when value is bad?
-            console.log("THIS VALUE IS BAD " + event.target.value)
+            console.log("THIS VALUE IS BAD " + event.target.value + ":   " +this.props.id)
             this.setState({value: "" })
 
         }
         else { // Only update state if it within 1-9
             // TODO only update state if this is a valid number
-            console.log("THE CURRENT VALUE IS " + event.target.value)
+            console.log("THE CURRENT VALUE ISP " + event.target.value)
             this.setState({ value: event.target.value});
         }
     }
@@ -36,9 +37,39 @@ class Square extends React.Component{
 }
 
 class Board extends React.Component{
-    renderSquare(i) {
-        return <Square />;
+    constructor(props){
+        super(props);
+        this.state = {
+            squares: Array(81).fill(null)
+        }
     }
+
+    renderSquare(i) {
+        return <Square key={i}/>;
+    }
+
+    // sumRows() {
+    //     var sum, row, col;
+
+    //     // Get current col and row
+    //     col = this.props.id % 9;
+    //     row = Math.floor(Number(this.props.id / 9));
+
+    //     sum = 0;
+    //     // go through all row indexes, and make sure current value is unique
+    //     for (var ind= row*9; ind<( (row+1) * 9); ind ++){
+    //         sum+= this.props.squares[ind].value;
+    //     }
+
+    //     console.log("COL "+ col + " : ROW = " + row)
+
+    //     return sum;
+    // }
+    componentDidUpdate(prevProps) {
+        console.log("UPDATED")
+        this.render()
+    }
+
 
     render(){
         const status = "Looking good!";
@@ -55,17 +86,6 @@ class Board extends React.Component{
                     <ul>{squares}</ul>
                 </div>
                 {/* <Grid container spacing={12}> */}
-                <div>
-                    <button>1</button>
-                    <button>2</button>
-                    <button>3</button>
-                    <button>4</button>
-                    <button>5</button>
-                    <button>6</button>
-                    <button>7</button>
-                    <button>8</button>
-                    <button>9</button>
-                </div>
             </div>
         )
     }
