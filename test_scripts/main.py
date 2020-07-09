@@ -73,8 +73,6 @@ num_turns = 0
 def solve_board(board):
     i,j = find_empty(board)
     if (i == -1 or j == -1):
-        # global num_turns
-        # num_turns += 1
         return True # Signal that board is solved
 
     for temp_val in range(1,10):
@@ -104,26 +102,12 @@ def generate_random_board():
 
     ## Fill 9 numbers first, then solve board to fill in the rest
     for cell in range(9):
-        
         ind = valid_ind[cell]
-
-        print(f'Ind = {ind}')
-
         col = ind % 9 
         row = (ind // 9)
-
         board[row][col] = values[cell]
 
-        # i = 0
-        # for i in range(9):
-        #     board[row][col] = values[i]
-        #     temp_val = values[i]
-
-        #     if check_if_valid(temp_val, row, col, board):
-        #         print(f'Add IND={ind} Val={temp_val} {board[row][col]}')
-        #         break
-        #     else:
-        #         board[row][col] = 0
+    solve_board(board)
 
     ## Now randomy erase cells. We'll erase the first 60
     valid_ind = list(range(1, 81))
@@ -135,7 +119,6 @@ def generate_random_board():
             row = (ind // 9)
             board[row][col] = 0
 
-    print_board(board)
     return board
 
 def main():
@@ -145,6 +128,7 @@ def main():
     # board = generate_board()
     board = generate_random_board()
     print_board(board)
+    num_turns=0
     print("------SOLVED------")
     solve_board(board)
     print_board(board)
