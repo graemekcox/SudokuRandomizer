@@ -1,6 +1,6 @@
 import os, random, math
 
-num_turns = 0
+
 
 def generate_board():
     w,h = 9, 9
@@ -54,7 +54,6 @@ def check_if_valid(val, row, col, board):
         return False
     
     # Check col
-    cols = []
     for i in range(9):
         if (board[i][col] == val):
             return False
@@ -70,36 +69,84 @@ def check_if_valid(val, row, col, board):
 
     return True
 
+num_turns = 0
 def solve_board(board):
     i,j = find_empty(board)
     if (i == -1 or j == -1):
+        # global num_turns
+        # num_turns += 1
         return True # Signal that board is solved
 
     for temp_val in range(1,10):
         if check_if_valid(temp_val, i , j, board):
             board[i][j] = temp_val
 
-            num_turns = num_turns + 1
-
             ## See if the board can be solved with this temp_val
             if (solve_board(board)):
+                global num_turns
+                num_turns += 1
                 return True
             else:
                 board[i][j] = 0 # Reset value if this isn't a solution
 
     return False
 
+# Notes: should have uinque solutino
+def generate_random_board():
+    w,h = 9, 9
+    board = [[0 for x in range(w)] for y in range (h)]
+
+    valid_ind = list(range(1, 81))
+    random.shuffle(valid_ind)
+
+    values = list(range(1,10))
+    random.shuffle(values)
+
+    ## Fill 9 numbers first, then solve board to fill in the rest
+    for cell in range(9):
+        
+        ind = valid_ind[cell]
+
+        print(f'Ind = {ind}')
+
+        col = ind % 9 
+        row = (ind // 9)
+
+        board[row][col] = values[cell]
+
+        # i = 0
+        # for i in range(9):
+        #     board[row][col] = values[i]
+        #     temp_val = values[i]
+
+        #     if check_if_valid(temp_val, row, col, board):
+        #         print(f'Add IND={ind} Val={temp_val} {board[row][col]}')
+        #         break
+        #     else:
+        #         board[row][col] = 0
+
+    ## Now randomy erase cells. We'll erase the first 60
+    valid_ind = list(range(1, 81))
+    random.shuffle(valid_ind)
+
+    for i in range(60):
+            ind = valid_ind[i]
+            col = ind % 9 
+            row = (ind // 9)
+            board[row][col] = 0
+
+    print_board(board)
+    return board
 
 def main():
-    board = generate_board()
-    
-    num_turns = 0
+    global num_turns
+
     print("------ORIGINAL------")
+    # board = generate_board()
+    board = generate_random_board()
     print_board(board)
     print("------SOLVED------")
-
     solve_board(board)
-
     print_board(board)
 
     print("Number of turns to solve = %", num_turns)
