@@ -14,7 +14,7 @@ const colors =[
     'rgb(38, 42, 255)'
   ]
   
-function createEmptyBoard(){
+function create_empty_board(){
     let board = [];
     for (let row = 0; row < 9 ; row++){
         let column = []
@@ -29,55 +29,12 @@ function createEmptyBoard(){
     return board;
 }
 
-function createBasicBoard(){
-    let board = [
-        [0,2,0,4,5,6,7,8,9],
-        [4,5,7,0,8,0,2,3,6],
-        [6,8,9,2,3,7,0,4,0],
-        [0,0,5,3,6,2,9,7,4],
-        [2,7,4,0,9,0,6,5,3],
-        [3,9,6,5,7,4,8,0,0],
-        [0,4,0,6,1,8,3,9,7],
-        [7,6,1,0,4,0,5,2,8],
-        [9,3,8,7,2,5,0,6,0]
-    ]
-    return board
-}
-
 function shuffle(arr){
     for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     return arr;
-}
-function createRandomBoard(){
-    let board = createEmptyBoard()
-
-    let values = new Array(81);
-    for (let i=0; i<values.length; i++){
-        values[i] = i;
-    }
-    // shuffle(values)
-
-    let valid_ind = new Array(81);
-    for (let i=0; i<valid_ind.length; i++){
-        valid_ind[i] = i;
-    }
-    for (let i=0; i<9; i++){
-        let ind = valid_ind[i];
-        const col = ind % 9;
-        const row = Math.floor(i / 9);
-
-        board[row][col] = values[i];
-    }
-    // shuffle(valid_ind)
-    solve_board(board);
-
-    clean_board(board);
-
-    return board;
-
 }
 
 function clean_board(board){
@@ -103,7 +60,7 @@ function clean_board(board){
 function find_empty(board){
     for (let i=0; i < 9; i++){
         for (let j=0; j<9; j++){
-            if (board[i][j] == 0) {
+            if (board[i][j] === 0) {
                 return [i,j];
             }
         }
@@ -118,7 +75,7 @@ function check_if_valid(val, val_row, val_col, board){
 
     // Check columns
     for (let i=0; i<9; i++){
-        if (board[i][val_col] == val){
+        if (board[i][val_col] === val){
             return false;
         }
     }
@@ -129,7 +86,7 @@ function check_if_valid(val, val_row, val_col, board){
 
     for (let row=start_row; row < (start_row + 3); row++){
         for (let col=start_col; col < (start_col+3); col++){
-            if ((board[row][col] === val) & (val_row != row) & (val_col != col)){
+            if ((board[row][col] === val) & (val_row !== row) & (val_col !== col)){
                 return false;
             }
         }
@@ -142,7 +99,7 @@ function check_row(new_val, row, board)
     var values = Array(9);
 
     for (var ind= row*9; ind<( (row+1) * 9); ind ++){
-        if (board[ind] != null)
+        if (board[ind] !== null)
             values[ind] = Number(board[ind]);
         else   
             values[ind] = 0;
@@ -156,7 +113,7 @@ function check_col(new_val, col, board){
     var values = Array(9);
 
     for (var ind=col; ind< (9*9)   ; ind=ind+9){
-        if (board[ind] != null)
+        if (board[ind] !== null)
             values[ind] = Number(board[ind]);
         else   
             values[ind] = 0;
@@ -186,34 +143,12 @@ function check_box(new_val, row, col, board){
         return -1;
 }
 
-function solve_board(board){
-    var coord= find_empty(board); // 0 is row, 1 is col
-    let row = coord[0];
-    let col = coord[1];
-    if ( row == -1 | col == -1){
-        return true;
-    }
-
-    for (let temp_val=1; temp_val < 10; temp_val++){
-        if (check_if_valid(temp_val, row, col, board)){
-            board[row][col] = temp_val;
-
-            if (solve_board(board)){
-                return true;
-            } else {
-                board[row][col] = 0;
-            }
-        }
-    }
-    // return board
-}
-
 class Board extends React.Component{
     constructor(props){
         super(props);
 
-        let board = createEmptyBoard();
-        let initialBoardElements = updateElements(board)
+        let board = create_empty_board();
+        let initialBoardElements = this.update_elements(board)
 
         this.state = {
             board: board,
@@ -221,10 +156,11 @@ class Board extends React.Component{
         }
     }
 
-    updateBoardElementsState() {
-        let boardElements = updateElements(this.state.board);
+    update_board_elements_state(board) {
+        let boardElements = this.update_elements(board);
         this.setState ({
-          boardElements
+            board: board,
+            boardElements
         })
         console.log(this.state.board);
       }
@@ -242,32 +178,145 @@ class Board extends React.Component{
 
     onSolve(){
         let solved_board = this.state.board
-        console.log(solved_board)
-        solve_board(solved_board)
-        console.log(solved_board)
-        let updatedBoardElements = updateElements(solved_board);
+        // console.log(solved_board)
+        this.solve_board(solved_board)
+        // console.log(solved_board)
+        let updatedBoardElements = this.update_elements(solved_board);
         this.setState ({
             board: solved_board,
             boardElements:updatedBoardElements});
-        console.log(solved_board)
+        // console.log(solved_board)
     }
 
     newBoard (){
-
-        // let new_board = createBasicBoard();
-        let new_board = createRandomBoard();
-        let updatedBoardElements = updateElements(new_board);
+        let new_board = this.create_random_board();
+        let updated_board_elements = this.update_elements(new_board);
         // this.setState({board: new_board});
         this.setState ({
             board: new_board,
-            boardElements:updatedBoardElements});
-            console.log(new_board)
-        // this.setState({
-            // board: new_board
-            // boardElements: updatedBoardElements
-        // })
+            boardElements:updated_board_elements});
+        console.log(new_board)
     }
 
+    create_random_board(){
+        let board = create_empty_board()
+    
+        let values = new Array(9);
+        for (let i=1; i<10; i++){
+            values[i] = i;
+        }
+        shuffle(values)
+    
+        let valid_ind = new Array(81);
+        for (let i=0; i<valid_ind.length; i++){
+            valid_ind[i] = i;
+        }
+        for (let i=0; i<9; i++){
+            let ind = valid_ind[i];
+            const col = ind % 9;
+            const row = Math.floor(i / 9);
+    
+            board[row][col] = values[i];
+        }
+        this.solve_board(board); 
+        clean_board(board);
+    
+        return board;
+    }
+    
+    solve_board(board){
+        var coord= find_empty(board); // 0 is row, 1 is col
+        let row = coord[0];
+        let col = coord[1];
+        if ( row === -1 | col === -1){
+            return true;
+        }
+    
+        for (let temp_val=1; temp_val < 10; temp_val++){
+            if (check_if_valid(temp_val, row, col, board)){
+                board[row][col] = temp_val;
+    
+                if (this.solve_board(board)){
+                    return true;
+                } else {
+                    board[row][col] = 0;
+                }
+            }
+        }
+    }
+
+    selectOption(row, col, value){
+        console.log("Select option. Row %d Col %d Val = %d",row,col,value)
+        let board = this.state.board;
+
+        // Check row
+        for (let i=0; i<9; i++){
+            if (value == board[row][i]){
+                return false;
+            }
+        }
+
+        // Check col
+        for (let j=0; j<9; j++){
+            if (value == board[j][col]){
+                return false;
+            }
+        }
+
+        // ## Check box
+        const start_col = Math.floor(col / 3) * 3
+        const start_row = Math.floor(row / 3) * 3
+
+        for (let i=start_row; i<start_row+3; i++){
+            for (let j=start_col; j<start_col+3; j++){
+                if ((value === board[i][j]) &
+                    (i !== row) &
+                    (j !== col)){
+                        return false
+                    }
+            }
+        }
+
+        // Then 
+        // board[col][row] = value;
+        board[row][col] = value;
+
+        let updated_board_elements = this.update_elements(board);
+        this.setState ({
+            board: board,
+            boardElements:updated_board_elements});
+    }
+
+    update_elements(board) {
+        let options = [1,2,3,4,5,6,7,8,9]
+        return (<div className="sudoku-board">
+            {board.map((row, i) => (
+    
+                <div className="sudoku-column">
+                {row.map((column,j) => (
+    
+                    //create elements, either solved values or available options
+                    column === 0 ? 
+                    <div  className={`sudoku-element element-${i}-${j}`}>
+                        {options.map(option => (
+                            <div className={`sudoku-option`} 
+                            style={{backgroundColor:colors[9]}}
+                            onClick={()=>this.selectOption(i,j,option)}>
+                                {option}
+                            </div>
+
+                        ))}
+    
+                    </div>
+                    : <div className="sudoku-element"
+                        style={{backgroundColor:colors[column - 1]}}>
+                            {column}
+                        </div>   
+                ))}
+                </div>
+            ))}
+            </div>)
+    }
     render(){        
 
         return (
@@ -288,37 +337,5 @@ class Board extends React.Component{
     }
 }
 
-function updateElements(board) {
-
-    let options = [1,2,3,4,5,6,7,8,9]
-    return (<div className="sudoku-board">
-          {board.map(column => (
-  
-            <div className="sudoku-column">
-              {column.map(row => (
-  
-                //create elements, either solved values or available options
-                row === 0 ? 
-                  <div  className={`sudoku-element element-${column}-${row}`}>
-                    {options.map(option => (
-                        <div className={`sudoku-option`} 
-                        style={{backgroundColor:colors[9]}}>
-                            {option}
-                        </div>
-
-                      ))}
-  
-                  </div>
-                  : <div className="sudoku-element"
-                     style={{backgroundColor:colors[row- 1]}}>
-                        {row}
-                    </div>   
-  
-              ))}
-            </div>
-  
-          ))}
-        </div>)
-}
 
 export default Board
