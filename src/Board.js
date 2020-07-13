@@ -2,38 +2,6 @@ import React from 'react';
 import './Board.css';
 import {generate_board} from './board_functions.js';
 
-    // onFieldChange(event) {
-    //     var new_val;
-    //     if ((event.target.value < 1 || event.target.value > 9) && event.target.value != "") {
-    //         // TODO, make square go red for a bit when value is bad?
-    //         this.setState({value: "" })
-    //         new_val = 0;
-    //     }
-    //     else { // Only update state if it within 1-9
-    //         new_val = event.target.value;
-    //         if (this.check_if_valid(Number(new_val)) == -1)
-    //             new_val = 0;
-    //     }
-
-    //     const fieldName = event.target.name;
-    //     // this.props.onChange(this.state.id, fieldName, event.target.value);
-    //    this.props.onChange(this.state.id, fieldName, new_val)
-    // }
-
-//     render() {
-//         // generate_board();
-//         // this.setState({squares: generate_board});
-//         return (
-//             <input 
-//                 className="square" 
-//                 type="number"
-//                 value={this.props.squares[this.props.id]}
-//                 // value={this.props.value}
-//                 onChange={this.onFieldChange.bind(this)}
-//             />
-//         );
-//     }
-// }
 const colors =[
     'rgb(33, 218, 202)',
     'rgb(28, 235, 82)',
@@ -75,9 +43,62 @@ function createBasicBoard(){
     ]
     return board
 }
-function create_random_board(){
+
+function shuffle(arr){
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+function createRandomBoard(){
+    let board = createEmptyBoard()
+
+    let values = new Array(81);
+    for (let i=0; i<values.length; i++){
+        values[i] = i;
+    }
+    // shuffle(values)
+
+    let valid_ind = new Array(81);
+    for (let i=0; i<valid_ind.length; i++){
+        valid_ind[i] = i;
+    }
+    for (let i=0; i<9; i++){
+        let ind = valid_ind[i];
+        const col = ind % 9;
+        const row = Math.floor(i / 9);
+
+        board[row][col] = values[i];
+    }
+    // shuffle(valid_ind)
+    solve_board(board);
+
+    clean_board(board);
+
+    return board;
 
 }
+
+function clean_board(board){
+    let valid_ind = new Array(81);
+    for (let i=0; i<valid_ind.length; i++){
+        valid_ind[i] = i;
+    }
+    shuffle(valid_ind);
+
+    let num_clues = Math.random() * (32 - 27) + 27;
+
+    for (let i=0; i< (81-num_clues); i++){
+        const ind = valid_ind[i];
+        const col = ind % 9;
+        const row = Math.floor(ind / 9);
+        board[row][col] = 0;
+    }
+    return board;
+}
+
+
 // Return row and column of first zero value
 function find_empty(board){
     for (let i=0; i < 9; i++){
@@ -233,7 +254,8 @@ class Board extends React.Component{
 
     newBoard (){
 
-        let new_board = createBasicBoard();
+        // let new_board = createBasicBoard();
+        let new_board = createRandomBoard();
         let updatedBoardElements = updateElements(new_board);
         // this.setState({board: new_board});
         this.setState ({
