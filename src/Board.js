@@ -74,7 +74,46 @@ function createBasicBoard(){
         [9,3,8,7,2,5,0,6,0]
     ]
     return board
+}
+function create_random_board(){
 
+}
+// Return row and column of first zero value
+function find_empty(board){
+    for (let i=0; i < 9; i++){
+        for (let j=0; j<9; j++){
+            if (board[i][j] == 0) {
+                return [i,j];
+            }
+        }
+    }
+    return [-1, -1];
+}
+
+function check_if_valid(val, val_row, val_col, board){
+    if (board[val_row].includes(val)){ // Check that value is not already in row or column
+        return false;
+    }
+
+    // Check columns
+    for (let i=0; i<9; i++){
+        if (board[i][val_col] == val){
+            return false;
+        }
+    }
+
+    // Check box
+    var start_col = Math.floor(val_col / 3) * 3;
+    var start_row = Math.floor(val_row / 3) * 3;
+
+    for (let row=start_row; row < (start_row + 3); row++){
+        for (let col=start_col; col < (start_col+3); col++){
+            if ((board[row][col] === val) & (val_row != row) & (val_col != col)){
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 function check_row(new_val, row, board)
@@ -126,6 +165,28 @@ function check_box(new_val, row, col, board){
         return -1;
 }
 
+function solve_board(board){
+    var coord= find_empty(board); // 0 is row, 1 is col
+    let row = coord[0];
+    let col = coord[1];
+    if ( row == -1 | col == -1){
+        return true;
+    }
+
+    for (let temp_val=1; temp_val < 10; temp_val++){
+        if (check_if_valid(temp_val, row, col, board)){
+            board[row][col] = temp_val;
+
+            if (solve_board(board)){
+                return true;
+            } else {
+                board[row][col] = 0;
+            }
+        }
+    }
+    // return board
+}
+
 class Board extends React.Component{
     constructor(props){
         super(props);
@@ -158,6 +219,18 @@ class Board extends React.Component{
         this.setState({board: board});
     }
 
+    onSolve(){
+        let solved_board = this.state.board
+        console.log(solved_board)
+        solve_board(solved_board)
+        console.log(solved_board)
+        let updatedBoardElements = updateElements(solved_board);
+        this.setState ({
+            board: solved_board,
+            boardElements:updatedBoardElements});
+        console.log(solved_board)
+    }
+
     newBoard (){
 
         let new_board = createBasicBoard();
@@ -183,7 +256,8 @@ class Board extends React.Component{
                     </div>
                 </div>
                 <div className="sudoku-buttons">
-                    <div className="sudoku-button">Solve</div>
+                    <div className="sudoku-button"
+                    onClick={this.onSolve.bind(this)}>Solve</div>
                     <div className="sudoku-button"
                     onClick={this.newBoard.bind(this)}>New Board</div>
                 </div>
