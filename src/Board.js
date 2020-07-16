@@ -1,6 +1,5 @@
 import React from 'react';
 import './Board.css';
-import {generate_board} from './board_functions.js';
 
 const colors =[
     'rgb(33, 218, 202)',
@@ -94,54 +93,6 @@ function check_if_valid(val, val_row, val_col, board){
     return true;
 }
 
-function check_row(new_val, row, board)
-{
-    var values = Array(9);
-
-    for (var ind= row*9; ind<( (row+1) * 9); ind ++){
-        if (board[ind] !== null)
-            values[ind] = Number(board[ind]);
-        else   
-            values[ind] = 0;
-    }
-    if (values.indexOf(new_val) !== -1){ // Check if this current value is within the array already
-        return -1;
-    }
-}
-
-function check_col(new_val, col, board){
-    var values = Array(9);
-
-    for (var ind=col; ind< (9*9)   ; ind=ind+9){
-        if (board[ind] !== null)
-            values[ind] = Number(board[ind]);
-        else   
-            values[ind] = 0;
-    }
-    if (values.indexOf(new_val) !== -1){ // Check if this current value is within the array already
-        return -1;
-    }
-}
-
-function check_box(new_val, row, col, board){
-    var values = Array(9);
-
-    var start_col = Math.floor(col / 3) * 3;
-    var start_row = Math.floor(row / 3) * 3;
-    var start_ind = start_row * 9 + start_col;
-
-    for (var i=0; i < 3 ; i++) {
-        for (var j=0; j<3; j++){
-            var ind = start_ind + j + (i*9);
-            if (board[ind] != null)
-                values[ind] = Number(board[ind]);
-            else
-                values[ind] = 0;
-        }
-    }
-    if (values.indexOf(new_val) !== -1)
-        return -1;
-}
 
 class Board extends React.Component{
     constructor(props){
@@ -246,19 +197,18 @@ class Board extends React.Component{
     }
 
     selectOption(row, col, value){
-        console.log("Select option. Row %d Col %d Val = %d",row,col,value)
         let board = this.state.board;
 
         // Check row
         for (let i=0; i<9; i++){
-            if (value == board[row][i]){
+            if (value === board[row][i]){
                 return false;
             }
         }
 
         // Check col
         for (let j=0; j<9; j++){
-            if (value == board[j][col]){
+            if (value === board[j][col]){
                 return false;
             }
         }
