@@ -271,25 +271,15 @@ class Board extends React.Component{
 
         return (
             <div>
-                <div className="sudoku-top">
-                    <div className="sudoku-container">
-                        <div className="sudoku-title">
-                            <h2>Sudoku</h2>
-                        </div>
-                        <div className="sudoku-board">
-                            {this.state.boardElements}
-                        </div>
-                        <div className="sudoku-buttons">
-                            <div className="sudoku-button"
-                            onClick={this.onSolve.bind(this)}>Solve</div>
-                            <div className="sudoku-button"
-                            onClick={this.newBoard.bind(this)}>New Board</div>
-                        </div>
-                        <div className="sudoku-description">
-                            <a>
-                                Here is the descriptions
-                            </a>
-                        </div>
+                <div className="sudoku-container">
+                    <div className="sudoku-board">
+                        {this.state.boardElements}
+                    </div>
+                    <div className="sudoku-buttons">
+                        <div className="sudoku-button"
+                        onClick={this.onSolve.bind(this)}>Solve</div>
+                        <div className="sudoku-button"
+                        onClick={this.newBoard.bind(this)}>New Board</div>
                     </div>
                 </div>
 

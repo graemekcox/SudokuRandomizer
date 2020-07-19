@@ -1,13 +1,13 @@
 .sudoku-top{
-  display: grid;
-  width: 1000px;
+  /* display: grid; */
+  /* width: 1000px; */
 }
 
 .sudoku-container {
   display: grid;
   grid-template-columns: 3fr 1fr;
   flex-wrap: wrap;
-  background-color:rgb(235, 235, 235);
+  background-color:rgb(255, 255, 255);
   padding:20px;
   border-radius:30px;
 }
@@ -16,7 +16,7 @@
   grid-row-start: 2;
   grid-row-end: 4;
   /* width:648px; */
-  width: 700px;
+  width: 750px;
   margin:0px 30px 0px 0px;
   position: relative;
   background-color: rgb(255, 255, 255);
@@ -81,35 +81,4 @@
   transition:.5s ease-in-out;
   background-color: cyan;
   margin: 10px;
-}
-
-.sudoku-title{
-  /* padding: 20px; */
-  /* height: 60px; */
-  border-radius: 20px;
-  margin: 10px;
-  background-color: white;
-  grid-column-start: 1;
-  grid-column-end: 3;
-  /* font-size: 30px;
-  text-align: center;
-  vertical-align: middle; */
-
-  /* display: flex;
-  flex-wrap: wrap;
-
-  vertical-align: middle;
-  font-size: 40px;
-  /* padding:4px; */
-}
-
-.sudoku-description{
-  grid-row-start: 3;
-  /* display: grid; */
-  flex-wrap: wrap;
-  background-color: lightgrey;
-  padding:20px;
-  border-radius:30px;
-  width: 160px;
-  height: auto;
 }
