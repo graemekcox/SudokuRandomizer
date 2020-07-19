@@ -270,18 +270,20 @@ class Board extends React.Component{
     render(){        
 
         return (
-            <div>
-                <div className="sudoku-container">
+            <div class="cover-container d-flex p-3 flex-column">
+                <div class="mx-auto" >
                     <div className="sudoku-board">
                         {this.state.boardElements}
                     </div>
-                    <div className="sudoku-buttons">
-                        <div className="sudoku-button"
-                        onClick={this.onSolve.bind(this)}>Solve</div>
-                        <div className="sudoku-button"
-                        onClick={this.newBoard.bind(this)}>New Board</div>
-                    </div>
                 </div>
+                <div class="btn-group
+                    btn-group-lg" role="group">
+                        <button type="button" class="btn btn-dark" size="lg"
+                            onClick={this.onSolve.bind(this)} block>Solve</button>
+                        <button type="button" class="btn btn-dark"
+                            onClick={this.newBoard.bind(this)}>New Board</button>         
+                </div>
+
 
             </div>
         )

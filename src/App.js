@@ -5,14 +5,7 @@ class App extends React.Component{
 
 
     render() {
-      
         return (
-            // <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
-            //     <Board/>
-            // </div>
-
-            // <div className="d-flex flex-wrap justify-content-center position-absolute w-100 h-100 align-items-center align-content-center">
-            // <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
             <div class="cover-container">
                 <header class="masthead mb-auto">
                     <div class="navbar navbar-dark bg-dark box-shadow">
@@ -42,16 +35,7 @@ class App extends React.Component{
                         </div>
                     </section>
                     <Board/>
-                </main>
-      
-
-            {/* <span className={`h1 mb-4 w-100 text-center text-${themeClass}`}>{ theme || 'Default' }</span> */}
-                
-            
-            <div className="btn-group">
-              
-            </div>
-            
+                </main>   
           </div>
         )
     }
